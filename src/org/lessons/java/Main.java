@@ -2,6 +2,7 @@ package org.lessons.java;
 
 
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,6 +10,12 @@ public class Main {
         String url = "jdbc:mysql://localhost:3306/db_nations";
         String user = "root";
         String password = "root";
+
+        //MILESTONE 3
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Inserisci una stringa di ricerca: ");
+        String inputUser = scan.nextLine();
+        scan.close();
 
         try (Connection con = DriverManager.getConnection(url, user, password)) {
 
@@ -23,9 +30,11 @@ public class Main {
                     + "	ON r.region_id = c.region_id \r\n"
                     + "INNER JOIN continents c2 \r\n"
                     + "	ON c2.continent_id = r.continent_id\r\n"
+                    + "WHERE c.name LIKE ?\r\n"
                     + "ORDER BY c.name";
 
             try (PreparedStatement ps = con.prepareStatement(sql)){
+                ps.setString(1, "%"+inputUser+"%");
 
                 try(ResultSet rs = ps.executeQuery()) {
 
